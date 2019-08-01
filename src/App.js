@@ -6,42 +6,40 @@ import ValidationComponent from './ValidationComponent/ValidationComponent';
 
 class App extends Component{
   state = {
-    stringValue: '',
-    l: 0
+    lettersArray: []
+  };
+
+  popLetter = (boxIndex) => {
+    const letters = [...this.state.lettersArray]
+    letters.splice(boxIndex,1)
+    this.setState({ lettersArray : letters})
+
   }
 
-  popLetter = (event) => {
-    console.log(event.target.value);
-  }
-
-  outputLength = (event) => { 
-    const strVal = event.target.value;
-    const l = strVal.length;
+  handleChange = (event) => { 
+    const newLetters = event.target.value.split('');
 
     this.setState({
-      stringValue: strVal,
-      l: l
-    });
+      lettersArray : newLetters});
   }
 
 render() {
   const letters= (
     <div>
-      {this.state.stringValue.split('').map((letter) => {
+      {this.state.lettersArray.map((letter, index) => {
         return <CharComponent 
-        click={this.popLetter}>{letter}</CharComponent>;
+        click={() => this.popLetter(index)}
+        key={Math.round(Math.random() * 1000)}>{letter}</CharComponent>;
       })}
     </div>
       );
- 
 
-   
   return (
     <div>
-      <input type="text" onChange={this.outputLength} />
-      <p>{this.state.l}</p>
+      <input type="text" value={this.state.lettersArray.join('')} onChange={this.handleChange} />
+      <p>{this.state.lettersArray.length}</p>
       <ValidationComponent
-        textLength={this.state.l} />
+        textLength={this.state.lettersArray.length} />
       {letters}
     </div>
   )};
